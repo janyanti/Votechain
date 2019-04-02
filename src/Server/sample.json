@@ -1,0 +1,15 @@
+[
+  {
+    "first_name": "John",
+    "last_name": "Doe",
+    "DOB": "01/01/1900",
+    "ID": "A0000-00000",
+    "vote_data": {
+      "date": "12/12/2019",
+      "vote_issue": "ELECTION",
+      "vote_cast": "CANDIDATE 1"
+    },
+    "prev_hash": "0",
+    "curr_hash": "1"
+  }
+]
