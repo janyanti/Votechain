@@ -11,7 +11,6 @@ export function format_date(data){
   var day = date.getUTCDate().toString()
 
   const formatted = month + "/" + day + "/" + year
-  console.log(formatted)
   return formatted
 }
 

@@ -10,7 +10,7 @@ class App extends Component {
   constructor(){
     super()
     this.state = {
-      view: 'register',
+      view: 'voting',
       deadline: new Date("06/01/2019"),
       vote_status: 'User Vote Unauthorized',
       is_voting: false
@@ -28,7 +28,6 @@ class App extends Component {
     var url = 'http://localhost:5000/blocks'
     var options = {
       method: 'POST',
-      mode: 'no-cors',
       headers:
        { 'cache-control': 'no-cache',
          'Content-Type': 'application/json'
@@ -37,20 +36,24 @@ class App extends Component {
       };
 
       fetch(url, options)
-        .then(response => (response.json()))
-        .then((data, stats) => {
-          if(typeof(data) == typeof(List)){
-            console.log('Sucess:', data)
-            result = "Vote Recorded Succesfully"
+        .then(response => {
+          console.log("Stats", response.status)
+          if(response.status == 201){
+            alert("Vote Recorded Succesfully")
+            this.setState({vote_status: "Vote Recorded Succesfully"})
+            return
+          } else if (response.status == 400){
+            alert("User Has Already voted")
+            this.setState({vote_status: "User Has Already Voted"})
+            return
           } else {
-            result = "User Vote Unauthorized"
-          }})
+            alert("User Vote Unauthorized")
+              this.setState({vote_status: "User Vote Unauthorized"})
+            return
+          }
+        })
         .catch( err => {
-          console.error('Error:', err)
-          })
-        .then(() => {
-            this.setState({ vote_status: result })
-            btn.click()
+          alert("User Vote Unauthorized")
           })
 
   }
@@ -60,7 +63,6 @@ class App extends Component {
     var url = 'http://localhost:5000/register'
     var options = {
       method: 'POST',
-      mode: 'no-cors',
       headers:
        { 'cache-control': 'no-cache',
          'Content-Type': 'application/json'

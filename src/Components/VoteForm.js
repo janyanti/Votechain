@@ -44,6 +44,7 @@ export default class VoteForm extends Component{
     var status = "User Vote Unauthorized"
     if(!this.props.status){
       status = this.props.status
+      console.log(status)
     }
 
     const vote_candidates = [
