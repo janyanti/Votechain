@@ -2,7 +2,6 @@
 ##       imports       ##
 #########################
 import json
-import numpy
 import hashlib #crypto SHA256
 from constants import *
 #########################

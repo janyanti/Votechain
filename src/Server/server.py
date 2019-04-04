@@ -28,6 +28,7 @@ students = db['students'] # Collection name
 # Init application blockchain with POW difficulty of 5
 votechain = Blockchain(5)
 blocks = {}
+voted = []
 
 """
 Compare two string values;
@@ -52,18 +53,26 @@ def block_digest(block):
 def is_valid_user(data):
     #TODO implement with mongoDB database verification
     res = True
+    status = 403
     voter_id = data['ID']
     first_name = data['first_name']
     last_name = data['last_name']
     DOB = data['DOB']
     voter = students.find_one({"ID": voter_id})
     if voter == None:
-        return False
+        res = False
+        return (res, status)
+    if voter_id in voted:
+        res = False
+        status = 400
+        return (res, status)
     data_first = voter['first_name']
     data_last = voter['last_name']
     data_dob = voter['DOB']
     res = str_cmp(data_first,first_name) and str_cmp(data_last, last_name) and str_cmp(data_dob, DOB)
-    return res
+    if res:
+        voted.append(voter_id)
+    return (res, status)
 
 """
 delete_user_data: request -> respone
@@ -109,13 +118,16 @@ def parse_vote_data(request):
 
     for key in DATA_KEYS:
         temp[key] = request.get_json(force=True)[key]
-    if is_valid_user(temp):
+    (valid, status) = is_valid_user(temp)
+    print(valid, status)
+    if valid:
         block_id = votechain.getHeight()
         votechain.addBlock(json.dumps(temp))
         block_data = votechain.getBlock(block_id)
         print("Success")
         return (block_digest(block_data), 201)
-    return ('Unauthorized voter detected', 403)
+    print(status)
+    return ('Unauthorized voter detected', status)
 
 
 #########################
